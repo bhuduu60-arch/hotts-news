@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>All Posts - HOTTS NEWS</title>
+  <title>Settings - HOTTS NEWS</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body data-protected="true">
@@ -27,16 +27,23 @@
     <section class="dashboard-main">
       <div class="page-hero">
         <span class="tag">Admin</span>
-        <h1>All Posts</h1>
-        <p>This is where all your published posts will appear in admin.</p>
+        <h1>Settings</h1>
+        <p>Manage your website links and future verification settings here.</p>
       </div>
 
-      <section id="adminPostsList" class="news-grid">
-        <article class="card">
-          <div class="card-content">
-            <h3>Loading posts...</h3>
-          </div>
-        </article>
+      <section class="form-card">
+        <form class="post-form">
+          <label>Telegram Link</label>
+          <input type="text" placeholder="https://t.me/yourchannel" />
+
+          <label>YouTube Link</label>
+          <input type="text" placeholder="https://youtube.com/@yourchannel" />
+
+          <label>Google Verification Code</label>
+          <textarea rows="4" placeholder="Paste verification meta code here later"></textarea>
+
+          <button type="submit">Save Settings</button>
+        </form>
       </section>
     </section>
   </main>

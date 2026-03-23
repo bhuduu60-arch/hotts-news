@@ -19,7 +19,7 @@
       <a href="betting.html">Betting</a>
       <a href="players.html">Players</a>
       <a href="trending.html">Trending</a>
-      <a href="posts.html">Posts</a>
+      <a href="public-posts.html">Posts</a>
       <a href="search.html">Search</a>
       <a href="contact.html">Contact</a>
     </nav>
@@ -33,19 +33,16 @@
     </section>
 
     <section class="form-card">
-      <form class="search-form">
-        <input type="text" placeholder="Search news..." />
+      <form class="search-form" id="searchForm">
+        <input type="text" id="searchInput" placeholder="Search news..." />
         <button type="submit">Search</button>
       </form>
     </section>
 
-    <section class="news-grid search-results">
+    <section class="news-grid search-results" id="searchResults">
       <article class="card">
-        <div class="card-image"></div>
         <div class="card-content">
-          <span class="tag">Result</span>
-          <h3><a href="post.html">Search result preview post</a></h3>
-          <p>Later real matching posts from backend will show here.</p>
+          <h3>Search results will appear here</h3>
         </div>
       </article>
     </section>

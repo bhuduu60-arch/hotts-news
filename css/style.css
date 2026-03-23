@@ -298,7 +298,8 @@ main {
 
 .admin-form button,
 .post-form button,
-.search-form button {
+.search-form button,
+.delete-btn {
   padding: 14px 18px;
   border: none;
   border-radius: 12px;
@@ -306,6 +307,11 @@ main {
   color: white;
   font-weight: bold;
   cursor: pointer;
+}
+
+.delete-btn {
+  margin-top: 12px;
+  background: #b91c1c;
 }
 
 .dashboard-wrap {
