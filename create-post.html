@@ -32,12 +32,13 @@
       </div>
 
       <section class="form-card">
-        <form class="post-form">
+        <form class="post-form" id="postForm">
           <label>Post Title</label>
-          <input type="text" placeholder="Enter post title" />
+          <input type="text" name="title" placeholder="Enter post title" required />
 
           <label>Category</label>
-          <select>
+          <select name="category" required>
+            <option value="">Select category</option>
             <option>Football</option>
             <option>Betting</option>
             <option>Players</option>
@@ -45,17 +46,16 @@
             <option>General News</option>
           </select>
 
-          <label>Featured Image</label>
-          <input type="file" />
-
           <label>Short Description</label>
-          <textarea rows="4" placeholder="Enter short description"></textarea>
+          <textarea name="description" rows="4" placeholder="Enter short description" required></textarea>
 
           <label>Full Content</label>
-          <textarea rows="10" placeholder="Write full post content here"></textarea>
+          <textarea name="content" rows="10" placeholder="Write full post content here" required></textarea>
 
           <button type="submit">Publish Post</button>
         </form>
+
+        <p id="postMessage"></p>
       </section>
     </section>
   </main>
