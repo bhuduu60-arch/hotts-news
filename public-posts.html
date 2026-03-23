@@ -3,16 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post - HOTTS NEWS</title>
+  <title>Posts - HOTTS NEWS</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <header class="topbar">
     <div class="logo">
       <div class="logo-icon">HN</div>
-      <div class="logo-text"><span class="hotts">HOTTS</span> <span class="news">NEWS</span></div>
+      <div class="logo-text">
+        <span class="hotts">HOTTS</span>
+        <span class="news">NEWS</span>
+      </div>
     </div>
+
     <button class="menu-toggle" id="menuToggle">☰</button>
+
     <nav class="nav" id="navMenu">
       <a href="index.html">Home</a>
       <a href="football.html">Football</a>
@@ -26,15 +31,19 @@
   </header>
 
   <main>
-    <article class="single-post" id="singlePostContainer">
-      <span class="tag">Loading</span>
-      <h1>Loading post...</h1>
-      <p class="post-meta">Please wait...</p>
-      <div class="single-post-image"></div>
-      <div class="single-post-content">
-        <p>Loading content...</p>
-      </div>
-    </article>
+    <section class="page-hero">
+      <span class="tag">Posts</span>
+      <h1>Latest Posts</h1>
+      <p>Browse the latest stories from HOTTS NEWS.</p>
+    </section>
+
+    <section class="news-grid" id="publicPostsList">
+      <article class="card">
+        <div class="card-content">
+          <h3>Loading posts...</h3>
+        </div>
+      </article>
+    </section>
   </main>
 
   <footer class="site-footer">
