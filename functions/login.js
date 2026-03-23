@@ -3,8 +3,8 @@ export async function onRequestPost(context) {
   const username = formData.get("username");
   const password = formData.get("password");
 
-  const adminUser = "admin";
-  const adminPass = "12345678";
+  const adminUser = "bhuduu60";
+  const adminPass = "HottsNews@2025";
 
   if (username === adminUser && password === adminPass) {
     return new Response(JSON.stringify({
