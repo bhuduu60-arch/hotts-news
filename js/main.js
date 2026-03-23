@@ -6,6 +6,7 @@ const loginMessage = document.getElementById("loginMessage");
 const logoutBtn = document.getElementById("logoutBtn");
 const postForm = document.getElementById("postForm");
 const postMessage = document.getElementById("postMessage");
+const adminPostsList = document.getElementById("adminPostsList");
 const isProtectedPage = document.body.dataset.protected === "true";
 
 if (menuToggle && navMenu) {
@@ -82,12 +83,54 @@ if (postForm) {
   });
 }
 
+async function loadAdminPosts() {
+  if (!adminPostsList) return;
+
+  try {
+    const response = await fetch("/posts");
+    const data = await response.json();
+
+    if (!data.success || !data.posts.length) {
+      adminPostsList.innerHTML = `
+        <article class="card">
+          <div class="card-content">
+            <h3>No posts yet</h3>
+            <p>Your saved posts will appear here.</p>
+          </div>
+        </article>
+      `;
+      return;
+    }
+
+    adminPostsList.innerHTML = data.posts.map(post => `
+      <article class="card">
+        <div class="card-content">
+          <span class="tag">${post.category}</span>
+          <h3>${post.title}</h3>
+          <p>${post.description}</p>
+        </div>
+      </article>
+    `).join("");
+  } catch (error) {
+    adminPostsList.innerHTML = `
+      <article class="card">
+        <div class="card-content">
+          <h3>Failed to load posts</h3>
+          <p>Please try again later.</p>
+        </div>
+      </article>
+    `;
+  }
+}
+
 if (isProtectedPage) {
   fetch("/session")
     .then((response) => response.json())
     .then((data) => {
       if (!data.loggedIn) {
         window.location.href = "/admin.html";
+      } else {
+        loadAdminPosts();
       }
     })
     .catch(() => {
