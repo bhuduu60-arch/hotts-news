@@ -6,62 +6,43 @@
   <title>All Posts - HOTTS NEWS</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
-  <header class="topbar">
-    <div class="logo">
-      <div class="logo-icon">HN</div>
-      <div class="logo-text"><span class="hotts">HOTTS</span> <span class="news">NEWS</span></div>
-    </div>
-    <button class="menu-toggle" id="menuToggle">☰</button>
-    <nav class="nav" id="navMenu">
-      <a href="index.html">Home</a>
-      <a href="football.html">Football</a>
-      <a href="betting.html">Betting</a>
-      <a href="players.html">Players</a>
-      <a href="trending.html">Trending</a>
-      <a href="posts.html">Posts</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </header>
+<body data-protected="true">
+  <main class="dashboard-wrap">
+    <aside class="dashboard-sidebar">
+      <div class="logo">
+        <div class="logo-icon">HN</div>
+        <div class="logo-text"><span class="hotts">HOTTS</span> <span class="news">NEWS</span></div>
+      </div>
 
-  <main>
-    <section class="page-hero">
-      <span class="tag">Posts</span>
-      <h1>All Posts</h1>
-      <p>This page will list all your published posts later.</p>
-    </section>
+      <nav class="dashboard-nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="create-post.html">Create Post</a>
+        <a href="posts.html">All Posts</a>
+        <a href="search.html">Search</a>
+        <a href="index.html">View Site</a>
+        <a href="admin.html">Admin Login</a>
+      </nav>
+    </aside>
 
-    <section class="news-grid">
-      <article class="card">
-        <div class="card-image"></div>
-        <div class="card-content">
-          <span class="tag">Football</span>
-          <h3><a href="post.html">Sample post layout is ready</a></h3>
-          <p>This page will later show all your real published news posts.</p>
-        </div>
-      </article>
+    <section class="dashboard-main">
+      <div class="page-hero">
+        <span class="tag">Admin</span>
+        <h1>All Posts</h1>
+        <p>This is where all your published posts will appear in admin.</p>
+      </div>
 
-      <article class="card">
-        <div class="card-image"></div>
-        <div class="card-content">
-          <span class="tag">Trending</span>
-          <h3><a href="post.html">Post listing structure is active</a></h3>
-          <p>You will use this page to browse all stories on the site.</p>
-        </div>
-      </article>
+      <section class="news-grid">
+        <article class="card">
+          <div class="card-image"></div>
+          <div class="card-content">
+            <span class="tag">Sample</span>
+            <h3>No real posts yet</h3>
+            <p>Your published posts will appear here once backend posting is complete.</p>
+          </div>
+        </article>
+      </section>
     </section>
   </main>
-
-  <footer class="site-footer">
-    <div class="footer-links">
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="disclaimer.html">Disclaimer</a>
-      <a href="terms.html">Terms</a>
-      <a href="contact.html">Contact</a>
-    </div>
-    <p>© 2025 HOTTS NEWS. All rights reserved.</p>
-  </footer>
 
   <script src="js/main.js"></script>
 </body>
