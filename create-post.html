@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Post - HOTTS NEWS</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="dashboard-wrap">
+    <aside class="dashboard-sidebar">
+      <div class="logo">
+        <div class="logo-icon">HN</div>
+        <div class="logo-text"><span class="hotts">HOTTS</span> <span class="news">NEWS</span></div>
+      </div>
+
+      <nav class="dashboard-nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="create-post.html">Create Post</a>
+        <a href="#">All Posts</a>
+        <a href="#">Categories</a>
+        <a href="#">Settings</a>
+        <a href="index.html">View Site</a>
+      </nav>
+    </aside>
+
+    <section class="dashboard-main">
+      <div class="page-hero">
+        <span class="tag">Admin</span>
+        <h1>Create Post</h1>
+        <p>Use this form to create your daily news posts.</p>
+      </div>
+
+      <section class="form-card">
+        <form class="post-form">
+          <label>Post Title</label>
+          <input type="text" placeholder="Enter post title" />
+
+          <label>Category</label>
+          <select>
+            <option>Football</option>
+            <option>Betting</option>
+            <option>Players</option>
+            <option>Trending</option>
+            <option>General News</option>
+          </select>
+
+          <label>Featured Image</label>
+          <input type="file" />
+
+          <label>Short Description</label>
+          <textarea rows="4" placeholder="Enter short description"></textarea>
+
+          <label>Full Content</label>
+          <textarea rows="10" placeholder="Write full post content here"></textarea>
+
+          <button type="submit">Publish Post</button>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
