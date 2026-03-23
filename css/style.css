@@ -14,12 +14,13 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 24px;
+  padding: 18px 20px;
   background: #111111;
   border-bottom: 1px solid #222;
   position: sticky;
   top: 0;
   z-index: 1000;
+  gap: 12px;
 }
 
 .logo {
@@ -29,20 +30,21 @@ body {
 }
 
 .logo-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #ffcc00, #ff7a00, #e11d48);
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffd000, #ff7a00, #e11d48);
   color: white;
   font-weight: 900;
+  font-size: 1.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 18px rgba(255, 122, 0, 0.35);
+  box-shadow: 0 0 22px rgba(255, 140, 0, 0.35);
 }
 
 .logo-text {
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: 900;
 }
 
@@ -54,6 +56,15 @@ body {
   color: #ef4444;
 }
 
+.menu-toggle {
+  display: none;
+  background: none;
+  color: white;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
 .nav {
   display: flex;
   gap: 18px;
@@ -62,11 +73,27 @@ body {
 .nav a {
   color: #e5e7eb;
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 main {
-  padding: 24px;
+  padding: 20px;
+}
+
+.promo-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.promo-bar a {
+  text-decoration: none;
+  background: #15151c;
+  color: #fff;
+  border: 1px solid #2a2a35;
+  padding: 12px 16px;
+  border-radius: 999px;
 }
 
 .hero {
@@ -76,19 +103,35 @@ main {
   margin-bottom: 32px;
 }
 
+.hero-slider {
+  position: relative;
+}
+
 .hero-main,
 .mini-card,
 .card {
   background: #15151c;
   border: 1px solid #22232d;
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
+}
+
+.hero-main {
+  display: none;
+}
+
+.hero-main.active {
+  display: block;
 }
 
 .hero-image,
 .card-image {
   background: linear-gradient(135deg, #2a2a35, #15151c);
-  height: 260px;
+  height: 280px;
+}
+
+.hero-image.alt {
+  background: linear-gradient(135deg, #3a1c1c, #15151c);
 }
 
 .hero-content,
@@ -99,6 +142,14 @@ main {
 .hero-content h1 {
   font-size: 2rem;
   margin: 10px 0;
+  line-height: 1.2;
+}
+
+.hero-content p,
+.card-content p,
+.mini-card p {
+  color: #cbd5e1;
+  line-height: 1.6;
 }
 
 .hero-side {
@@ -109,22 +160,22 @@ main {
 
 .mini-card {
   padding: 20px;
-  min-height: 140px;
+  min-height: 160px;
 }
 
 .tag {
   display: inline-block;
   background: #e11d48;
   color: white;
-  padding: 6px 10px;
+  padding: 7px 12px;
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .section-title {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .section-title h2 {
@@ -138,19 +189,13 @@ main {
 }
 
 .card-image {
-  height: 180px;
+  height: 190px;
 }
 
 .card-content h3 {
   margin: 10px 0;
-  font-size: 1.15rem;
-}
-
-.card-content p,
-.hero-content p,
-.mini-card p {
-  color: #cbd5e1;
-  line-height: 1.6;
+  font-size: 1.1rem;
+  line-height: 1.4;
 }
 
 @media (max-width: 900px) {
@@ -159,13 +204,27 @@ main {
     grid-template-columns: 1fr;
   }
 
-  .topbar {
-    flex-direction: column;
-    gap: 14px;
-    align-items: flex-start;
+  .menu-toggle {
+    display: block;
   }
 
   .nav {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: #111111;
+    padding-top: 10px;
+  }
+
+  .nav.show {
+    display: flex;
+  }
+
+  .topbar {
     flex-wrap: wrap;
+  }
+
+  .logo-text {
+    font-size: 1.5rem;
   }
 }
