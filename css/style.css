@@ -110,7 +110,8 @@ main {
 .hero-main,
 .mini-card,
 .card,
-.page-hero {
+.page-hero,
+.single-post {
   background: #15151c;
   border: 1px solid #22232d;
   border-radius: 20px;
@@ -126,7 +127,8 @@ main {
 }
 
 .hero-image,
-.card-image {
+.card-image,
+.single-post-image {
   background: linear-gradient(135deg, #2a2a35, #15151c);
   height: 280px;
 }
@@ -137,12 +139,15 @@ main {
 
 .hero-content,
 .card-content,
-.page-hero {
+.page-hero,
+.single-post-content,
+.single-post {
   padding: 20px;
 }
 
 .hero-content h1,
-.page-hero h1 {
+.page-hero h1,
+.single-post h1 {
   font-size: 2rem;
   margin: 10px 0;
   line-height: 1.2;
@@ -151,9 +156,10 @@ main {
 .hero-content p,
 .card-content p,
 .mini-card p,
-.page-hero p {
+.page-hero p,
+.single-post-content p {
   color: #cbd5e1;
-  line-height: 1.6;
+  line-height: 1.8;
 }
 
 .hero-side {
@@ -202,8 +208,23 @@ main {
   line-height: 1.4;
 }
 
+.card-content h3 a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
 .page-hero {
   margin-bottom: 24px;
+}
+
+.post-meta {
+  color: #94a3b8;
+  margin-bottom: 16px;
+}
+
+.single-post-image {
+  border-radius: 16px;
+  margin: 14px 0 18px;
 }
 
 .site-footer {
