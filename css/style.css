@@ -109,7 +109,8 @@ main {
 
 .hero-main,
 .mini-card,
-.card {
+.card,
+.page-hero {
   background: #15151c;
   border: 1px solid #22232d;
   border-radius: 20px;
@@ -135,11 +136,13 @@ main {
 }
 
 .hero-content,
-.card-content {
+.card-content,
+.page-hero {
   padding: 20px;
 }
 
-.hero-content h1 {
+.hero-content h1,
+.page-hero h1 {
   font-size: 2rem;
   margin: 10px 0;
   line-height: 1.2;
@@ -147,7 +150,8 @@ main {
 
 .hero-content p,
 .card-content p,
-.mini-card p {
+.mini-card p,
+.page-hero p {
   color: #cbd5e1;
   line-height: 1.6;
 }
@@ -196,6 +200,10 @@ main {
   margin: 10px 0;
   font-size: 1.1rem;
   line-height: 1.4;
+}
+
+.page-hero {
+  margin-bottom: 24px;
 }
 
 @media (max-width: 900px) {
