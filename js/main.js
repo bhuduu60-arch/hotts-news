@@ -3,6 +3,7 @@ const navMenu = document.getElementById("navMenu");
 const slides = document.querySelectorAll(".hero-main");
 const loginForm = document.getElementById("loginForm");
 const loginMessage = document.getElementById("loginMessage");
+const logoutBtn = document.getElementById("logoutBtn");
 const isProtectedPage = document.body.dataset.protected === "true";
 
 if (menuToggle && navMenu) {
@@ -44,6 +45,14 @@ if (loginForm) {
       loginMessage.textContent = data.message || "Login failed";
       loginMessage.style.color = "#ef4444";
     }
+  });
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    await fetch("/logout");
+    window.location.href = "/admin.html";
   });
 }
 
