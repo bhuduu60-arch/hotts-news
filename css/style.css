@@ -233,9 +233,13 @@ main {
   margin-bottom: 16px;
 }
 
-.single-post-image {
+.single-post-image,
+.real-post-image {
   border-radius: 16px;
   margin: 14px 0 18px;
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
 }
 
 .site-footer {

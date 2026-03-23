@@ -13,6 +13,11 @@ const singlePostContainer = document.getElementById("singlePostContainer");
 const searchForm = document.getElementById("searchForm");
 const searchInput = document.getElementById("searchInput");
 const searchResults = document.getElementById("searchResults");
+const settingsForm = document.getElementById("settingsForm");
+const settingsMessage = document.getElementById("settingsMessage");
+const telegramField = document.getElementById("telegramField");
+const youtubeField = document.getElementById("youtubeField");
+const googleVerificationField = document.getElementById("googleVerificationField");
 const isProtectedPage = document.body.dataset.protected === "true";
 
 if (menuToggle && navMenu) {
@@ -67,9 +72,37 @@ if (postForm) {
       postMessage.textContent = "Post published successfully";
       postMessage.style.color = "#22c55e";
       postForm.reset();
+      loadAdminPosts();
     } else {
       postMessage.textContent = data.message || "Failed to save post";
       postMessage.style.color = "#ef4444";
+    }
+  });
+}
+
+if (settingsForm) {
+  fetch("/get-settings")
+    .then(res => res.json())
+    .then(data => {
+      if (data.success && data.settings) {
+        telegramField.value = data.settings.telegram || "";
+        youtubeField.value = data.settings.youtube || "";
+        googleVerificationField.value = data.settings.googleVerification || "";
+      }
+    });
+
+  settingsForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(settingsForm);
+    const response = await fetch("/save-settings", { method: "POST", body: formData });
+    const data = await response.json();
+
+    if (data.success) {
+      settingsMessage.textContent = "Settings saved successfully";
+      settingsMessage.style.color = "#22c55e";
+    } else {
+      settingsMessage.textContent = data.message || "Failed to save settings";
+      settingsMessage.style.color = "#ef4444";
     }
   });
 }
@@ -92,6 +125,7 @@ async function loadAdminPosts() {
           <span class="tag">${post.category}</span>
           <h3>${post.title}</h3>
           <p>${post.description}</p>
+          <p style="color:#94a3b8;font-size:14px;">${post.image || "No image URL"}</p>
           <form class="delete-form" data-id="${post.id}">
             <button type="submit" class="delete-btn">Delete</button>
           </form>
@@ -168,12 +202,15 @@ async function loadSinglePost() {
     }
 
     const post = data.post;
+    const imageBlock = post.image
+      ? `<img src="${post.image}" alt="${post.title}" class="real-post-image">`
+      : `<div class="single-post-image"></div>`;
 
     singlePostContainer.innerHTML = `
       <span class="tag">${post.category}</span>
       <h1>${post.title}</h1>
       <p class="post-meta">${new Date(post.createdAt).toDateString()}</p>
-      <div class="single-post-image"></div>
+      ${imageBlock}
       <div class="single-post-content">
         <p>${post.description}</p>
         <p>${post.content.replace(/\n/g, "</p><p>")}</p>

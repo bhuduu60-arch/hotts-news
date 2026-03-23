@@ -18,6 +18,7 @@ export async function onRequestPost(context) {
     const category = formData.get("category");
     const description = formData.get("description");
     const content = formData.get("content");
+    const image = formData.get("image") || "";
 
     if (!title || !category || !description || !content) {
       return new Response(JSON.stringify({
@@ -29,13 +30,9 @@ export async function onRequestPost(context) {
       });
     }
 
-    const slug = title
-      .toString()
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "");
-
+    const slug = title.toString().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     const postId = `post:${Date.now()}`;
+
     const postData = {
       id: postId,
       slug,
@@ -43,6 +40,7 @@ export async function onRequestPost(context) {
       category,
       description,
       content,
+      image,
       createdAt: new Date().toISOString()
     };
 
@@ -56,7 +54,7 @@ export async function onRequestPost(context) {
       status: 200,
       headers: { "Content-Type": "application/json" }
     });
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({
       success: false,
       message: "Server error"

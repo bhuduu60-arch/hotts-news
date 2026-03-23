@@ -32,18 +32,20 @@
       </div>
 
       <section class="form-card">
-        <form class="post-form">
+        <form class="post-form" id="settingsForm">
           <label>Telegram Link</label>
-          <input type="text" placeholder="https://t.me/yourchannel" />
+          <input type="text" name="telegram" id="telegramField" placeholder="https://t.me/yourchannel" />
 
           <label>YouTube Link</label>
-          <input type="text" placeholder="https://youtube.com/@yourchannel" />
+          <input type="text" name="youtube" id="youtubeField" placeholder="https://youtube.com/@yourchannel" />
 
           <label>Google Verification Code</label>
-          <textarea rows="4" placeholder="Paste verification meta code here later"></textarea>
+          <textarea name="googleVerification" id="googleVerificationField" rows="4" placeholder="Paste verification meta code here later"></textarea>
 
           <button type="submit">Save Settings</button>
         </form>
+
+        <p id="settingsMessage"></p>
       </section>
     </section>
   </main>
