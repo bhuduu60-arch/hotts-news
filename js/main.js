@@ -18,12 +18,20 @@ const settingsMessage = document.getElementById("settingsMessage");
 const telegramField = document.getElementById("telegramField");
 const youtubeField = document.getElementById("youtubeField");
 const googleVerificationField = document.getElementById("googleVerificationField");
+const telegramPromo = document.getElementById("telegramPromo");
+const youtubePromo = document.getElementById("youtubePromo");
+const editPostForm = document.getElementById("editPostForm");
+const editPostId = document.getElementById("editPostId");
+const editTitle = document.getElementById("editTitle");
+const editCategory = document.getElementById("editCategory");
+const editImage = document.getElementById("editImage");
+const editDescription = document.getElementById("editDescription");
+const editContent = document.getElementById("editContent");
+const editMessage = document.getElementById("editMessage");
 const isProtectedPage = document.body.dataset.protected === "true";
 
 if (menuToggle && navMenu) {
-  menuToggle.addEventListener("click", () => {
-    navMenu.classList.toggle("show");
-  });
+  menuToggle.addEventListener("click", () => navMenu.classList.toggle("show"));
 }
 
 let currentSlide = 0;
@@ -72,7 +80,6 @@ if (postForm) {
       postMessage.textContent = "Post published successfully";
       postMessage.style.color = "#22c55e";
       postForm.reset();
-      loadAdminPosts();
     } else {
       postMessage.textContent = data.message || "Failed to save post";
       postMessage.style.color = "#ef4444";
@@ -107,6 +114,18 @@ if (settingsForm) {
   });
 }
 
+async function applyPublicSettings() {
+  try {
+    const response = await fetch("/get-settings");
+    const data = await response.json();
+
+    if (data.success && data.settings) {
+      if (telegramPromo && data.settings.telegram) telegramPromo.href = data.settings.telegram;
+      if (youtubePromo && data.settings.youtube) youtubePromo.href = data.settings.youtube;
+    }
+  } catch {}
+}
+
 async function loadAdminPosts() {
   if (!adminPostsList) return;
 
@@ -126,6 +145,7 @@ async function loadAdminPosts() {
           <h3>${post.title}</h3>
           <p>${post.description}</p>
           <p style="color:#94a3b8;font-size:14px;">${post.image || "No image URL"}</p>
+          <a href="edit-post.html?id=${encodeURIComponent(post.id)}" class="edit-link">Edit</a>
           <form class="delete-form" data-id="${post.id}">
             <button type="submit" class="delete-btn">Delete</button>
           </form>
@@ -151,6 +171,56 @@ async function loadAdminPosts() {
   } catch {
     adminPostsList.innerHTML = `<article class="card"><div class="card-content"><h3>Failed to load posts</h3><p>Please try again later.</p></div></article>`;
   }
+}
+
+async function loadEditPost() {
+  if (!editPostForm) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  if (!id) {
+    editMessage.textContent = "Missing post ID";
+    editMessage.style.color = "#ef4444";
+    return;
+  }
+
+  try {
+    const response = await fetch(`/get-post?id=${encodeURIComponent(id)}`);
+    const data = await response.json();
+
+    if (!data.success) {
+      editMessage.textContent = "Post not found";
+      editMessage.style.color = "#ef4444";
+      return;
+    }
+
+    const post = data.post;
+    editPostId.value = post.id;
+    editTitle.value = post.title;
+    editCategory.value = post.category;
+    editImage.value = post.image || "";
+    editDescription.value = post.description;
+    editContent.value = post.content;
+  } catch {
+    editMessage.textContent = "Failed to load post";
+    editMessage.style.color = "#ef4444";
+  }
+
+  editPostForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(editPostForm);
+    const response = await fetch("/update-post", { method: "POST", body: formData });
+    const data = await response.json();
+
+    if (data.success) {
+      editMessage.textContent = "Post updated successfully";
+      editMessage.style.color = "#22c55e";
+    } else {
+      editMessage.textContent = data.message || "Update failed";
+      editMessage.style.color = "#ef4444";
+    }
+  });
 }
 
 async function loadPublicPosts(target, limit = null) {
@@ -275,6 +345,7 @@ if (isProtectedPage) {
         window.location.href = "/admin.html";
       } else {
         loadAdminPosts();
+        loadEditPost();
       }
     })
     .catch(() => {
@@ -282,6 +353,7 @@ if (isProtectedPage) {
     });
 }
 
+applyPublicSettings();
 loadPublicPosts(publicHomePosts, 6);
 loadPublicPosts(publicPostsList);
 loadSinglePost();

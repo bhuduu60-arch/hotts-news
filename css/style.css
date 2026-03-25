@@ -303,7 +303,8 @@ main {
 .admin-form button,
 .post-form button,
 .search-form button,
-.delete-btn {
+.delete-btn,
+.edit-link {
   padding: 14px 18px;
   border: none;
   border-radius: 12px;
@@ -311,11 +312,19 @@ main {
   color: white;
   font-weight: bold;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
 }
 
 .delete-btn {
   margin-top: 12px;
   background: #b91c1c;
+}
+
+.edit-link {
+  margin-top: 12px;
+  margin-right: 8px;
 }
 
 .dashboard-wrap {

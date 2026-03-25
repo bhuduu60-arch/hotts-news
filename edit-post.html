@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Post - HOTTS NEWS</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-protected="true">
+  <main class="dashboard-wrap">
+    <aside class="dashboard-sidebar">
+      <div class="logo">
+        <div class="logo-icon">HN</div>
+        <div class="logo-text"><span class="hotts">HOTTS</span> <span class="news">NEWS</span></div>
+      </div>
+
+      <nav class="dashboard-nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="create-post.html">Create Post</a>
+        <a href="posts.html">All Posts</a>
+        <a href="settings.html">Settings</a>
+        <a href="index.html">View Site</a>
+        <a href="#" id="logoutBtn">Logout</a>
+      </nav>
+    </aside>
+
+    <section class="dashboard-main">
+      <div class="page-hero">
+        <span class="tag">Admin</span>
+        <h1>Edit Post</h1>
+        <p>Update your saved post here.</p>
+      </div>
+
+      <section class="form-card">
+        <form class="post-form" id="editPostForm">
+          <input type="hidden" name="id" id="editPostId" />
+
+          <label>Post Title</label>
+          <input type="text" name="title" id="editTitle" required />
+
+          <label>Category</label>
+          <select name="category" id="editCategory" required>
+            <option>Football</option>
+            <option>Betting</option>
+            <option>Players</option>
+            <option>Trending</option>
+            <option>General News</option>
+          </select>
+
+          <label>Image URL</label>
+          <input type="text" name="image" id="editImage" />
+
+          <label>Short Description</label>
+          <textarea name="description" id="editDescription" rows="4" required></textarea>
+
+          <label>Full Content</label>
+          <textarea name="content" id="editContent" rows="10" required></textarea>
+
+          <button type="submit">Update Post</button>
+        </form>
+
+        <p id="editMessage"></p>
+      </section>
+    </section>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
