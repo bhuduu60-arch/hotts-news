@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Tasks - HOTTS NEWS</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-protected="true">
+  <main class="dashboard-wrap">
+    <aside class="dashboard-sidebar">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">HN</div>
+        <div class="logo-text"><span class="hotts">HOTTS</span> <span class="news">NEWS</span></div>
+      </a>
+
+      <nav class="dashboard-nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="create-post.html">Create Post</a>
+        <a href="posts.html">All Posts</a>
+        <a href="tasks.html">Create Tasks</a>
+        <a href="settings.html">Settings</a>
+        <a href="index.html">View Site</a>
+        <a href="#" id="logoutBtn">Logout</a>
+      </nav>
+    </aside>
+
+    <section class="dashboard-main">
+      <div class="page-hero">
+        <span class="tag">Tasks</span>
+        <h1>Task Creation</h1>
+        <p>Create reward tasks for signed-up members.</p>
+      </div>
+
+      <section class="form-card">
+        <form class="post-form" id="taskForm">
+          <label>Task Title</label>
+          <input type="text" name="title" required />
+
+          <label>Task Description</label>
+          <textarea name="description" rows="4" required></textarea>
+
+          <label>Task Link</label>
+          <input type="text" name="link" required />
+
+          <label>Task Points</label>
+          <input type="number" name="points" required />
+
+          <button type="submit">Create Task</button>
+        </form>
+
+        <p id="taskMessage"></p>
+      </section>
+
+      <section class="form-card analytics-section">
+        <h2>Created Tasks</h2>
+        <div id="adminTaskList"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

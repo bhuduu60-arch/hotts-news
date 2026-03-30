@@ -693,3 +693,57 @@ if (dailyCheckinBtn && userPoints) {
     }
   });
 }
+const taskForm = document.getElementById("taskForm");
+const taskMessage = document.getElementById("taskMessage");
+const adminTaskList = document.getElementById("adminTaskList");
+
+if (taskForm) {
+  taskForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(taskForm);
+
+    const response = await fetch("/create-task", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      taskMessage.textContent = "Task created successfully";
+      taskMessage.style.color = "#22c55e";
+      taskForm.reset();
+      loadAdminTasks();
+    } else {
+      taskMessage.textContent = data.message || "Task creation failed";
+      taskMessage.style.color = "#ef4444";
+    }
+  });
+}
+
+async function loadAdminTasks() {
+  if (!adminTaskList) return;
+
+  try {
+    const response = await fetch("/get-tasks");
+    const data = await response.json();
+
+    if (!data.success || !data.tasks.length) {
+      adminTaskList.innerHTML = `<p>No tasks created yet.</p>`;
+      return;
+    }
+
+    adminTaskList.innerHTML = data.tasks.map(task => `
+      <div class="comment-box">
+        <strong>${task.title}</strong>
+        <p>${task.description}</p>
+        <p>${task.points} points</p>
+        <p><a href="${task.link}" target="_blank">${task.link}</a></p>
+      </div>
+    `).join("");
+  } catch {
+    adminTaskList.innerHTML = `<p>Failed to load tasks.</p>`;
+  }
+}
+
+loadAdminTasks();
