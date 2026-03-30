@@ -1,10 +1,10 @@
 export async function onRequestPost(context) {
   try {
     const formData = await context.request.formData();
-    const fullName = formData.get("fullName");
-    const email = formData.get("email");
-    const country = formData.get("country");
-    const contact = formData.get("contact") || "";
+    const fullName = String(formData.get("fullName") || "").trim();
+    const email = String(formData.get("email") || "").trim().toLowerCase();
+    const country = String(formData.get("country") || "").trim();
+    const contact = String(formData.get("contact") || "").trim();
 
     if (!fullName || !email || !country) {
       return new Response(JSON.stringify({
@@ -16,24 +16,32 @@ export async function onRequestPost(context) {
       });
     }
 
-    const userId = `user:${Date.now()}`;
-    const userData = {
-      id: userId,
+    const existingApply = await context.env.POSTS_KV.get(`apply:${email}`);
+    const existingMember = await context.env.POSTS_KV.get(`member:${email}`);
+
+    if (existingApply || existingMember) {
+      return new Response(JSON.stringify({
+        success: false,
+        message: "You already applied or signed up"
+      }), {
+        status: 409,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    const application = {
       fullName,
       email,
       country,
       contact,
-      points: 0,
-      status: "approved",
       createdAt: new Date().toISOString()
     };
 
-    await context.env.POSTS_KV.put(userId, JSON.stringify(userData));
+    await context.env.POSTS_KV.put(`apply:${email}`, JSON.stringify(application));
 
     return new Response(JSON.stringify({
       success: true,
-      message: "Application successful",
-      user: userData
+      message: "Application successful"
     }), {
       status: 200,
       headers: { "Content-Type": "application/json" }
