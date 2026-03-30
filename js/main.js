@@ -1,6 +1,5 @@
 const menuToggle = document.getElementById("menuToggle");
 const navMenu = document.getElementById("navMenu");
-const slides = document.querySelectorAll(".hero-main");
 const loginForm = document.getElementById("loginForm");
 const loginMessage = document.getElementById("loginMessage");
 const logoutBtn = document.getElementById("logoutBtn");
@@ -20,6 +19,11 @@ const youtubeField = document.getElementById("youtubeField");
 const googleVerificationField = document.getElementById("googleVerificationField");
 const telegramPromo = document.getElementById("telegramPromo");
 const youtubePromo = document.getElementById("youtubePromo");
+const heroSliderLive = document.getElementById("heroSliderLive");
+const footballPosts = document.getElementById("footballPosts");
+const bettingPosts = document.getElementById("bettingPosts");
+const playersPosts = document.getElementById("playersPosts");
+const trendingPosts = document.getElementById("trendingPosts");
 const editPostForm = document.getElementById("editPostForm");
 const editPostId = document.getElementById("editPostId");
 const editTitle = document.getElementById("editTitle");
@@ -32,15 +36,6 @@ const isProtectedPage = document.body.dataset.protected === "true";
 
 if (menuToggle && navMenu) {
   menuToggle.addEventListener("click", () => navMenu.classList.toggle("show"));
-}
-
-let currentSlide = 0;
-if (slides.length > 0) {
-  setInterval(() => {
-    slides[currentSlide].classList.remove("active");
-    currentSlide = (currentSlide + 1) % slides.length;
-    slides[currentSlide].classList.add("active");
-  }, 4000);
 }
 
 if (loginForm) {
@@ -126,6 +121,45 @@ async function applyPublicSettings() {
   } catch {}
 }
 
+async function getAllPosts() {
+  const response = await fetch("/public-posts");
+  const data = await response.json();
+  return data.success ? data.posts : [];
+}
+
+async function loadHeroSlider() {
+  if (!heroSliderLive) return;
+  const posts = await getAllPosts();
+
+  if (!posts.length) {
+    heroSliderLive.innerHTML = `<article class="hero-live-card"><div class="card-content"><h2>No top stories yet</h2><p>Your latest posts will show here.</p></div></article>`;
+    return;
+  }
+
+  const topPosts = posts.slice(0, 3);
+
+  heroSliderLive.innerHTML = topPosts.map((post, index) => `
+    <article class="hero-live-card ${index === 0 ? 'active-slide' : ''}">
+      <div class="card-content">
+        <span class="tag">${post.category}</span>
+        <h2><a href="post.html?slug=${post.slug}">${post.title}</a></h2>
+        <p>${post.description}</p>
+      </div>
+    </article>
+  `).join("");
+
+  const slides = document.querySelectorAll(".hero-live-card");
+  let current = 0;
+
+  if (slides.length > 1) {
+    setInterval(() => {
+      slides[current].classList.remove("active-slide");
+      current = (current + 1) % slides.length;
+      slides[current].classList.add("active-slide");
+    }, 4000);
+  }
+}
+
 async function loadAdminPosts() {
   if (!adminPostsList) return;
 
@@ -158,24 +192,18 @@ async function loadAdminPosts() {
         e.preventDefault();
         const formData = new FormData();
         formData.append("id", form.dataset.id);
-
-        const response = await fetch("/delete-post", {
-          method: "POST",
-          body: formData
-        });
-
+        const response = await fetch("/delete-post", { method: "POST", body: formData });
         const data = await response.json();
         if (data.success) loadAdminPosts();
       });
     });
   } catch {
-    adminPostsList.innerHTML = `<article class="card"><div class="card-content"><h3>Failed to load posts</h3><p>Please try again later.</p></div></article>`;
+    adminPostsList.innerHTML = `<article class="card"><div class="card-content"><h3>Failed to load posts</h3></div></article>`;
   }
 }
 
 async function loadEditPost() {
   if (!editPostForm) return;
-
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
@@ -223,31 +251,73 @@ async function loadEditPost() {
   });
 }
 
-async function loadPublicPosts(target, limit = null) {
+function renderPosts(target, posts) {
   if (!target) return;
 
+  if (!posts.length) {
+    target.innerHTML = `<article class="card"><div class="card-content"><h3>No posts yet</h3></div></article>`;
+    return;
+  }
+
+  target.innerHTML = posts.map(post => `
+    <article class="card">
+      <div class="card-content">
+        <span class="tag">${post.category}</span>
+        <h3><a href="post.html?slug=${post.slug}">${post.title}</a></h3>
+        <p>${post.description}</p>
+      </div>
+    </article>
+  `).join("");
+}
+
+async function loadPublicPosts(target, limit = null) {
+  if (!target) return;
+  const posts = await getAllPosts();
+  renderPosts(target, limit ? posts.slice(0, limit) : posts);
+}
+
+async function loadCategoryPosts() {
+  const posts = await getAllPosts();
+  renderPosts(footballPosts, posts.filter(p => p.category.toLowerCase() === "football"));
+  renderPosts(bettingPosts, posts.filter(p => p.category.toLowerCase() === "betting"));
+  renderPosts(playersPosts, posts.filter(p => p.category.toLowerCase() === "players"));
+  renderPosts(trendingPosts, posts.filter(p => p.category.toLowerCase() === "trending"));
+}
+
+async function loadComments(slug) {
+  const container = document.getElementById("commentsList");
+  if (!container) return;
+
   try {
-    const response = await fetch("/public-posts");
+    const response = await fetch(`/get-comments?slug=${encodeURIComponent(slug)}`);
     const data = await response.json();
 
-    if (!data.success || !data.posts.length) {
-      target.innerHTML = `<article class="card"><div class="card-content"><h3>No posts yet</h3><p>Published stories will appear here soon.</p></div></article>`;
+    if (!data.success || !data.comments.length) {
+      container.innerHTML = `<p>No comments yet.</p>`;
       return;
     }
 
-    const posts = limit ? data.posts.slice(0, limit) : data.posts;
-
-    target.innerHTML = posts.map(post => `
-      <article class="card">
-        <div class="card-content">
-          <span class="tag">${post.category}</span>
-          <h3><a href="post.html?slug=${post.slug}">${post.title}</a></h3>
-          <p>${post.description}</p>
-        </div>
-      </article>
+    container.innerHTML = data.comments.map(c => `
+      <div class="comment-box">
+        <strong>${c.name}</strong>
+        <p>${c.comment}</p>
+      </div>
     `).join("");
   } catch {
-    target.innerHTML = `<article class="card"><div class="card-content"><h3>Failed to load posts</h3><p>Please try again later.</p></div></article>`;
+    container.innerHTML = `<p>Failed to load comments.</p>`;
+  }
+}
+
+async function loadLikes(slug) {
+  const likesCount = document.getElementById("likesCount");
+  if (!likesCount) return;
+
+  try {
+    const response = await fetch(`/get-likes?slug=${encodeURIComponent(slug)}`);
+    const data = await response.json();
+    likesCount.textContent = data.likes || 0;
+  } catch {
+    likesCount.textContent = 0;
   }
 }
 
@@ -258,7 +328,7 @@ async function loadSinglePost() {
   const slug = params.get("slug");
 
   if (!slug) {
-    singlePostContainer.innerHTML = `<h1>Post not found</h1><p class="post-meta">Missing post link.</p>`;
+    singlePostContainer.innerHTML = `<h1>Post not found</h1>`;
     return;
   }
 
@@ -267,7 +337,7 @@ async function loadSinglePost() {
     const data = await response.json();
 
     if (!data.success) {
-      singlePostContainer.innerHTML = `<h1>Post not found</h1><p class="post-meta">This post does not exist.</p>`;
+      singlePostContainer.innerHTML = `<h1>Post not found</h1>`;
       return;
     }
 
@@ -285,49 +355,72 @@ async function loadSinglePost() {
         <p>${post.description}</p>
         <p>${post.content.replace(/\n/g, "</p><p>")}</p>
       </div>
+
+      <div class="post-actions">
+        <button id="likeBtn">👍 Like (<span id="likesCount">0</span>)</button>
+        <a href="https://wa.me/?text=${encodeURIComponent(post.title + ' https://hotts-news.pages.dev/post.html?slug=' + post.slug)}" target="_blank" class="share-btn">Share</a>
+      </div>
+
+      <section class="comments-section">
+        <h3>Comments</h3>
+        <form id="commentForm" class="post-form">
+          <input type="text" name="name" id="commentName" placeholder="Your name" required />
+          <textarea name="comment" id="commentText" rows="4" placeholder="Write a comment" required></textarea>
+          <button type="submit">Post Comment</button>
+        </form>
+        <div id="commentsList"></div>
+      </section>
     `;
+
+    await loadLikes(slug);
+    await loadComments(slug);
+
+    const likeBtn = document.getElementById("likeBtn");
+    if (likeBtn) {
+      likeBtn.addEventListener("click", async () => {
+        const formData = new FormData();
+        formData.append("slug", slug);
+        const response = await fetch("/like-post", { method: "POST", body: formData });
+        const data = await response.json();
+        if (data.success) {
+          document.getElementById("likesCount").textContent = data.likes;
+        }
+      });
+    }
+
+    const commentForm = document.getElementById("commentForm");
+    if (commentForm) {
+      commentForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append("slug", slug);
+        formData.append("name", document.getElementById("commentName").value);
+        formData.append("comment", document.getElementById("commentText").value);
+
+        const response = await fetch("/save-comment", { method: "POST", body: formData });
+        const data = await response.json();
+        if (data.success) {
+          commentForm.reset();
+          loadComments(slug);
+        }
+      });
+    }
   } catch {
-    singlePostContainer.innerHTML = `<h1>Error</h1><p class="post-meta">Failed to load post.</p>`;
+    singlePostContainer.innerHTML = `<h1>Error loading post</h1>`;
   }
 }
 
 async function handleSearch(query) {
   if (!searchResults) return;
-
-  try {
-    const response = await fetch("/public-posts");
-    const data = await response.json();
-
-    if (!data.success || !data.posts.length) {
-      searchResults.innerHTML = `<article class="card"><div class="card-content"><h3>No posts found</h3></div></article>`;
-      return;
-    }
-
-    const q = query.toLowerCase().trim();
-    const filtered = data.posts.filter(post =>
-      post.title.toLowerCase().includes(q) ||
-      post.description.toLowerCase().includes(q) ||
-      post.content.toLowerCase().includes(q) ||
-      post.category.toLowerCase().includes(q)
-    );
-
-    if (!filtered.length) {
-      searchResults.innerHTML = `<article class="card"><div class="card-content"><h3>No matching result</h3></div></article>`;
-      return;
-    }
-
-    searchResults.innerHTML = filtered.map(post => `
-      <article class="card">
-        <div class="card-content">
-          <span class="tag">${post.category}</span>
-          <h3><a href="post.html?slug=${post.slug}">${post.title}</a></h3>
-          <p>${post.description}</p>
-        </div>
-      </article>
-    `).join("");
-  } catch {
-    searchResults.innerHTML = `<article class="card"><div class="card-content"><h3>Search failed</h3></div></article>`;
-  }
+  const posts = await getAllPosts();
+  const q = query.toLowerCase().trim();
+  const filtered = posts.filter(post =>
+    post.title.toLowerCase().includes(q) ||
+    post.description.toLowerCase().includes(q) ||
+    post.content.toLowerCase().includes(q) ||
+    post.category.toLowerCase().includes(q)
+  );
+  renderPosts(searchResults, filtered);
 }
 
 if (searchForm) {
@@ -354,6 +447,8 @@ if (isProtectedPage) {
 }
 
 applyPublicSettings();
+loadHeroSlider();
 loadPublicPosts(publicHomePosts, 6);
 loadPublicPosts(publicPostsList);
+loadCategoryPosts();
 loadSinglePost();
