@@ -140,6 +140,7 @@ async function loadHeroSlider() {
 
   heroSliderLive.innerHTML = topPosts.map((post, index) => `
     <article class="hero-live-card ${index === 0 ? 'active-slide' : ''}">
+      ${post.image ? `<img src="${post.image}" alt="${post.title}" class="card-image real-card-image">` : ""}
       <div class="card-content">
         <span class="tag">${post.category}</span>
         <h2><a href="post.html?slug=${post.slug}">${post.title}</a></h2>
@@ -174,6 +175,7 @@ async function loadAdminPosts() {
 
     adminPostsList.innerHTML = data.posts.map(post => `
       <article class="card">
+        ${post.image ? `<img src="${post.image}" alt="${post.title}" class="card-image real-card-image">` : ""}
         <div class="card-content">
           <span class="tag">${post.category}</span>
           <h3>${post.title}</h3>
@@ -261,6 +263,7 @@ function renderPosts(target, posts) {
 
   target.innerHTML = posts.map(post => `
     <article class="card">
+      ${post.image ? `<img src="${post.image}" alt="${post.title}" class="card-image real-card-image">` : ""}
       <div class="card-content">
         <span class="tag">${post.category}</span>
         <h3><a href="post.html?slug=${post.slug}">${post.title}</a></h3>
@@ -319,7 +322,7 @@ async function loadLikes(slug) {
     likesCount.textContent = data.likes || 0;
 
     const likedKey = `liked_${slug}`;
-    if (localStorage.getItem(likedKey)) {
+    if (localStorage.getItem(likedKey) && likeBtn) {
       likeBtn.disabled = true;
       likeBtn.textContent = `👍 Liked (${data.likes || 0})`;
     }
