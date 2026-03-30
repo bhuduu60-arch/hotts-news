@@ -563,3 +563,38 @@ loadPublicPosts(publicHomePosts, 6);
 loadPublicPosts(publicPostsList);
 loadCategoryPosts();
 loadSinglePost();
+const applyForm = document.getElementById("applyForm");
+const applyMessage = document.getElementById("applyMessage");
+const userPoints = document.getElementById("userPoints");
+
+if (applyForm) {
+  applyForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(applyForm);
+    const response = await fetch("/apply", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      localStorage.setItem("hotts_user", JSON.stringify(data.user));
+      applyMessage.textContent = "Application successful. Redirecting...";
+      applyMessage.style.color = "#22c55e";
+      setTimeout(() => {
+        window.location.href = "/user-dashboard.html";
+      }, 1000);
+    } else {
+      applyMessage.textContent = data.message || "Application failed";
+      applyMessage.style.color = "#ef4444";
+    }
+  });
+}
+
+if (userPoints) {
+  const user = JSON.parse(localStorage.getItem("hotts_user") || "null");
+  if (user) {
+    userPoints.textContent = user.points || 0;
+  }
+}
