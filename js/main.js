@@ -34,6 +34,7 @@ const editContent = document.getElementById("editContent");
 const editMessage = document.getElementById("editMessage");
 const analyticsBoxes = document.getElementById("analyticsBoxes");
 const topPostsList = document.getElementById("topPostsList");
+const dashboardTotalPosts = document.getElementById("dashboardTotalPosts");
 const isProtectedPage = document.body.dataset.protected === "true";
 
 if (menuToggle && navMenu) {
@@ -356,9 +357,9 @@ async function loadAnalytics() {
     if (!data.success) return;
 
     analyticsBoxes.innerHTML = `
-      <div class="dashboard-box"><h3>Total Views</h3><p>${data.totalViews}</p></div>
-      <div class="dashboard-box"><h3>Today's Views</h3><p>${data.dailyViews}</p></div>
-      <div class="dashboard-box"><h3>Last Activity</h3><p>${data.lastActivity}</p></div>
+      <div class="dashboard-box analytics-red"><h3>Total Views</h3><p>${data.totalViews}</p></div>
+      <div class="dashboard-box analytics-green"><h3>Today's Views</h3><p>${data.dailyViews}</p></div>
+      <div class="dashboard-box analytics-red"><h3>Last Activity</h3><p>${data.lastActivity}</p></div>
     `;
 
     if (!data.topPosts.length) {
@@ -373,6 +374,12 @@ async function loadAnalytics() {
       </div>
     `).join("");
   } catch {}
+}
+
+async function loadDashboardPostCount() {
+  if (!dashboardTotalPosts) return;
+  const posts = await getAllPosts();
+  dashboardTotalPosts.textContent = posts.length;
 }
 
 async function loadSinglePost() {
@@ -534,6 +541,7 @@ if (isProtectedPage) {
         loadAdminPosts();
         loadEditPost();
         loadAnalytics();
+        loadDashboardPostCount();
       }
     })
     .catch(() => {

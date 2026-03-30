@@ -32,23 +32,37 @@
       </div>
 
       <div class="dashboard-grid">
-        <div class="dashboard-box">
+        <div class="dashboard-box analytics-red">
           <h3>Total Posts</h3>
-          <p>0</p>
+          <p id="dashboardTotalPosts">0</p>
         </div>
-        <div class="dashboard-box">
+        <div class="dashboard-box analytics-green">
           <h3>Categories</h3>
           <p>5</p>
         </div>
-        <div class="dashboard-box">
+        <div class="dashboard-box analytics-red">
           <h3>Featured Posts</h3>
           <p>0</p>
         </div>
-        <div class="dashboard-box">
+        <div class="dashboard-box analytics-green">
           <h3>Drafts</h3>
           <p>0</p>
         </div>
       </div>
+
+      <section class="form-card analytics-section">
+        <h2>Live Analytics</h2>
+        <div class="dashboard-grid" id="analyticsBoxes">
+          <div class="dashboard-box analytics-red"><h3>Total Views</h3><p>Loading...</p></div>
+          <div class="dashboard-box analytics-green"><h3>Today's Views</h3><p>Loading...</p></div>
+          <div class="dashboard-box analytics-red"><h3>Last Activity</h3><p>Loading...</p></div>
+        </div>
+      </section>
+
+      <section class="form-card analytics-section">
+        <h2>Top Viewed Posts</h2>
+        <div id="topPostsList"></div>
+      </section>
     </section>
   </main>
 
