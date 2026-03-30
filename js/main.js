@@ -310,12 +310,19 @@ async function loadComments(slug) {
 
 async function loadLikes(slug) {
   const likesCount = document.getElementById("likesCount");
+  const likeBtn = document.getElementById("likeBtn");
   if (!likesCount) return;
 
   try {
     const response = await fetch(`/get-likes?slug=${encodeURIComponent(slug)}`);
     const data = await response.json();
     likesCount.textContent = data.likes || 0;
+
+    const likedKey = `liked_${slug}`;
+    if (localStorage.getItem(likedKey)) {
+      likeBtn.disabled = true;
+      likeBtn.textContent = `👍 Liked (${data.likes || 0})`;
+    }
   } catch {
     likesCount.textContent = 0;
   }
@@ -342,6 +349,7 @@ async function loadSinglePost() {
     }
 
     const post = data.post;
+    const shareUrl = `${window.location.origin}/post.html?slug=${post.slug}`;
     const imageBlock = post.image
       ? `<img src="${post.image}" alt="${post.title}" class="real-post-image">`
       : `<div class="single-post-image"></div>`;
@@ -358,7 +366,7 @@ async function loadSinglePost() {
 
       <div class="post-actions">
         <button id="likeBtn">👍 Like (<span id="likesCount">0</span>)</button>
-        <a href="https://wa.me/?text=${encodeURIComponent(post.title + ' https://hotts-news.pages.dev/post.html?slug=' + post.slug)}" target="_blank" class="share-btn">Share</a>
+        <button id="shareBtn" class="share-btn">Share</button>
       </div>
 
       <section class="comments-section">
@@ -378,12 +386,37 @@ async function loadSinglePost() {
     const likeBtn = document.getElementById("likeBtn");
     if (likeBtn) {
       likeBtn.addEventListener("click", async () => {
+        const likedKey = `liked_${slug}`;
+        if (localStorage.getItem(likedKey)) return;
+
         const formData = new FormData();
         formData.append("slug", slug);
         const response = await fetch("/like-post", { method: "POST", body: formData });
         const data = await response.json();
+
         if (data.success) {
+          localStorage.setItem(likedKey, "true");
           document.getElementById("likesCount").textContent = data.likes;
+          likeBtn.disabled = true;
+          likeBtn.textContent = `👍 Liked (${data.likes})`;
+        }
+      });
+    }
+
+    const shareBtn = document.getElementById("shareBtn");
+    if (shareBtn) {
+      shareBtn.addEventListener("click", async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: post.title,
+              text: post.description,
+              url: shareUrl
+            });
+          } catch {}
+        } else {
+          navigator.clipboard.writeText(shareUrl);
+          shareBtn.textContent = "Link Copied";
         }
       });
     }
@@ -392,16 +425,24 @@ async function loadSinglePost() {
     if (commentForm) {
       commentForm.addEventListener("submit", async (e) => {
         e.preventDefault();
+
         const formData = new FormData();
         formData.append("slug", slug);
-        formData.append("name", document.getElementById("commentName").value);
-        formData.append("comment", document.getElementById("commentText").value);
+        formData.append("name", document.getElementById("commentName").value.trim());
+        formData.append("comment", document.getElementById("commentText").value.trim());
 
-        const response = await fetch("/save-comment", { method: "POST", body: formData });
+        const response = await fetch("/save-comment", {
+          method: "POST",
+          body: formData
+        });
+
         const data = await response.json();
+
         if (data.success) {
           commentForm.reset();
           loadComments(slug);
+        } else {
+          alert(data.message || "Comment failed");
         }
       });
     }

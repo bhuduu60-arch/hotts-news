@@ -1,24 +1,44 @@
-export async function onRequestGet(context) {
+export async function onRequestPost(context) {
   try {
-    const url = new URL(context.request.url);
-    const slug = url.searchParams.get("slug");
+    const formData = await context.request.formData();
+    const slug = formData.get("slug");
+    const name = formData.get("name");
+    const comment = formData.get("comment");
 
-    if (!slug) {
-      return new Response(JSON.stringify({ success: false, comments: [] }), {
+    if (!slug || !name || !comment) {
+      return new Response(JSON.stringify({
+        success: false,
+        message: "Missing fields"
+      }), {
         status: 400,
         headers: { "Content-Type": "application/json" }
       });
     }
 
-    const raw = await context.env.POSTS_KV.get(`comments:${slug}`);
+    const key = `comments:${slug}`;
+    const raw = await context.env.POSTS_KV.get(key);
     const comments = raw ? JSON.parse(raw) : [];
 
-    return new Response(JSON.stringify({ success: true, comments }), {
+    comments.unshift({
+      name: String(name).trim(),
+      comment: String(comment).trim(),
+      createdAt: new Date().toISOString()
+    });
+
+    await context.env.POSTS_KV.put(key, JSON.stringify(comments));
+
+    return new Response(JSON.stringify({
+      success: true,
+      comments
+    }), {
       status: 200,
       headers: { "Content-Type": "application/json" }
     });
-  } catch {
-    return new Response(JSON.stringify({ success: false, comments: [] }), {
+  } catch (error) {
+    return new Response(JSON.stringify({
+      success: false,
+      message: "Comment failed"
+    }), {
       status: 500,
       headers: { "Content-Type": "application/json" }
     });
