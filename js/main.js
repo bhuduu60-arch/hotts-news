@@ -36,6 +36,12 @@ const editMessage = document.getElementById("editMessage");
 const analyticsBoxes = document.getElementById("analyticsBoxes");
 const topPostsList = document.getElementById("topPostsList");
 const dashboardTotalPosts = document.getElementById("dashboardTotalPosts");
+const applyForm = document.getElementById("applyForm");
+const applyMessage = document.getElementById("applyMessage");
+const signupForm = document.getElementById("signupForm");
+const signupMessage = document.getElementById("signupMessage");
+const memberLoginForm = document.getElementById("memberLoginForm");
+const memberLoginMessage = document.getElementById("memberLoginMessage");
 const isProtectedPage = document.body.dataset.protected === "true";
 
 if (menuToggle && navMenu) {
@@ -118,6 +124,79 @@ if (settingsForm) {
     } else {
       settingsMessage.textContent = data.message || "Failed to save settings";
       settingsMessage.style.color = "#ef4444";
+    }
+  });
+}
+
+if (applyForm) {
+  applyForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(applyForm);
+    const response = await fetch("/apply", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      applyMessage.textContent = "Application successful. Redirecting to signup...";
+      applyMessage.style.color = "#22c55e";
+      setTimeout(() => {
+        window.location.href = "/signup.html";
+      }, 1000);
+    } else {
+      applyMessage.textContent = data.message || "Application failed";
+      applyMessage.style.color = "#ef4444";
+    }
+  });
+}
+
+if (signupForm) {
+  signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(signupForm);
+    const response = await fetch("/user-signup", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      signupMessage.textContent = "Signup successful. Redirecting to login...";
+      signupMessage.style.color = "#22c55e";
+      setTimeout(() => {
+        window.location.href = "/member-login.html";
+      }, 1000);
+    } else {
+      signupMessage.textContent = data.message || "Signup failed";
+      signupMessage.style.color = "#ef4444";
+    }
+  });
+}
+
+if (memberLoginForm) {
+  memberLoginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(memberLoginForm);
+    const response = await fetch("/user-login", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      localStorage.setItem("hotts_user", JSON.stringify(data.user));
+      memberLoginMessage.textContent = "Login successful. Redirecting...";
+      memberLoginMessage.style.color = "#22c55e";
+      setTimeout(() => {
+        window.location.href = "/user-dashboard.html";
+      }, 1000);
+    } else {
+      memberLoginMessage.textContent = data.message || "Login failed";
+      memberLoginMessage.style.color = "#ef4444";
     }
   });
 }
@@ -528,6 +607,14 @@ async function handleSearch(query) {
   renderPosts(searchResults, filtered);
 }
 
+const userPoints = document.getElementById("userPoints");
+if (userPoints) {
+  const user = JSON.parse(localStorage.getItem("hotts_user") || "null");
+  if (user) {
+    userPoints.textContent = user.points || 0;
+  }
+}
+
 if (searchForm) {
   searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -563,115 +650,3 @@ loadPublicPosts(publicHomePosts, 6);
 loadPublicPosts(publicPostsList);
 loadCategoryPosts();
 loadSinglePost();
-const applyForm = document.getElementById("applyForm");
-const applyMessage = document.getElementById("applyMessage");
-const userPoints = document.getElementById("userPoints");
-
-if (applyForm) {
-  applyForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const formData = new FormData(applyForm);
-    const response = await fetch("/apply", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      localStorage.setItem("hotts_user", JSON.stringify(data.user));
-      applyMessage.textContent = "Application successful. Redirecting...";
-      applyMessage.style.color = "#22c55e";
-      setTimeout(() => {
-        window.location.href = "/user-dashboard.html";
-      }, 1000);
-    } else {
-      applyMessage.textContent = data.message || "Application failed";
-      applyMessage.style.color = "#ef4444";
-    }
-  });
-}
-
-if (userPoints) {
-  const user = JSON.parse(localStorage.getItem("hotts_user") || "null");
-  if (user) {
-    userPoints.textContent = user.points || 0;
-  }
-}
-const signupForm = document.getElementById("signupForm");
-const signupMessage = document.getElementById("signupMessage");
-const memberLoginForm = document.getElementById("memberLoginForm");
-const memberLoginMessage = document.getElementById("memberLoginMessage");
-
-if (applyForm) {
-  applyForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const formData = new FormData(applyForm);
-    const response = await fetch("/apply", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      applyMessage.textContent = "Application successful. Redirecting to signup...";
-      applyMessage.style.color = "#22c55e";
-      setTimeout(() => {
-        window.location.href = "/signup.html";
-      }, 1000);
-    } else {
-      applyMessage.textContent = data.message || "Application failed";
-      applyMessage.style.color = "#ef4444";
-    }
-  });
-}
-
-if (signupForm) {
-  signupForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const formData = new FormData(signupForm);
-    const response = await fetch("/user-signup", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      signupMessage.textContent = "Signup successful. Redirecting to login...";
-      signupMessage.style.color = "#22c55e";
-      setTimeout(() => {
-        window.location.href = "/member-login.html";
-      }, 1000);
-    } else {
-      signupMessage.textContent = data.message || "Signup failed";
-      signupMessage.style.color = "#ef4444";
-    }
-  });
-}
-
-if (memberLoginForm) {
-  memberLoginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const formData = new FormData(memberLoginForm);
-    const response = await fetch("/user-login", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      localStorage.setItem("hotts_user", JSON.stringify(data.user));
-      memberLoginMessage.textContent = "Login successful. Redirecting...";
-      memberLoginMessage.style.color = "#22c55e";
-      setTimeout(() => {
-        window.location.href = "/user-dashboard.html";
-      }, 1000);
-    } else {
-      memberLoginMessage.textContent = data.message || "Login failed";
-      memberLoginMessage.style.color = "#ef4444";
-    }
-  });
-}
