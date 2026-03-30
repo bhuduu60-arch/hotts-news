@@ -19,6 +19,7 @@ export async function onRequestPost(context) {
     const description = formData.get("description");
     const content = formData.get("content");
     const image = formData.get("image") || "";
+    const externalLink = formData.get("externalLink") || "";
 
     if (!title || !category || !description || !content) {
       return new Response(JSON.stringify({
@@ -41,6 +42,7 @@ export async function onRequestPost(context) {
       description,
       content,
       image,
+      externalLink,
       createdAt: new Date().toISOString()
     };
 

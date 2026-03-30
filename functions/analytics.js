@@ -17,6 +17,8 @@ export async function onRequestGet(context) {
 
     const list = await context.env.POSTS_KV.list({ prefix: "post:" });
     const posts = [];
+    let totalLikes = 0;
+    let totalComments = 0;
 
     for (const key of list.keys) {
       const raw = await context.env.POSTS_KV.get(key.name);
@@ -24,10 +26,19 @@ export async function onRequestGet(context) {
 
       const post = JSON.parse(raw);
       const views = Number(await context.env.POSTS_KV.get(`stats:post:${post.slug}`) || "0");
+      const likes = Number(await context.env.POSTS_KV.get(`likes:${post.slug}`) || "0");
+      const commentsRaw = await context.env.POSTS_KV.get(`comments:${post.slug}`);
+      const comments = commentsRaw ? JSON.parse(commentsRaw) : [];
+
+      totalLikes += likes;
+      totalComments += comments.length;
+
       posts.push({
         title: post.title,
         slug: post.slug,
-        views
+        views,
+        likes,
+        comments: comments.length
       });
     }
 
@@ -37,6 +48,8 @@ export async function onRequestGet(context) {
       success: true,
       totalViews,
       dailyViews,
+      totalLikes,
+      totalComments,
       lastActivity,
       topPosts: posts.slice(0, 10)
     }), {

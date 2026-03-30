@@ -29,6 +29,7 @@ const editPostId = document.getElementById("editPostId");
 const editTitle = document.getElementById("editTitle");
 const editCategory = document.getElementById("editCategory");
 const editImage = document.getElementById("editImage");
+const editExternalLink = document.getElementById("editExternalLink");
 const editDescription = document.getElementById("editDescription");
 const editContent = document.getElementById("editContent");
 const editMessage = document.getElementById("editMessage");
@@ -46,11 +47,7 @@ async function trackView(slug = "") {
     const formData = new FormData();
     formData.append("path", window.location.pathname);
     if (slug) formData.append("slug", slug);
-
-    await fetch("/track-view", {
-      method: "POST",
-      body: formData
-    });
+    await fetch("/track-view", { method: "POST", body: formData });
   } catch {}
 }
 
@@ -143,6 +140,20 @@ async function getAllPosts() {
   return data.success ? data.posts : [];
 }
 
+function buildPostCard(post) {
+  return `
+    <article class="card">
+      ${post.image ? `<img src="${post.image}" alt="${post.title}" class="card-image real-card-image">` : `<div class="card-image"></div>`}
+      <div class="card-content">
+        <span class="tag">${post.category}</span>
+        <h3><a href="post.html?slug=${post.slug}">${post.title}</a></h3>
+        <p>${post.description}</p>
+        ${post.externalLink ? `<a href="${post.externalLink}" target="_blank" class="external-link-btn">Visit Link</a>` : ""}
+      </div>
+    </article>
+  `;
+}
+
 async function loadHeroSlider() {
   if (!heroSliderLive) return;
   const posts = await getAllPosts();
@@ -156,11 +167,12 @@ async function loadHeroSlider() {
 
   heroSliderLive.innerHTML = topPosts.map((post, index) => `
     <article class="hero-live-card ${index === 0 ? 'active-slide' : ''}">
-      ${post.image ? `<img src="${post.image}" alt="${post.title}" class="card-image real-card-image">` : ""}
+      ${post.image ? `<img src="${post.image}" alt="${post.title}" class="card-image real-card-image">` : `<div class="card-image"></div>`}
       <div class="card-content">
         <span class="tag">${post.category}</span>
         <h2><a href="post.html?slug=${post.slug}">${post.title}</a></h2>
         <p>${post.description}</p>
+        ${post.externalLink ? `<a href="${post.externalLink}" target="_blank" class="external-link-btn">Visit Link</a>` : ""}
       </div>
     </article>
   `).join("");
@@ -191,12 +203,13 @@ async function loadAdminPosts() {
 
     adminPostsList.innerHTML = data.posts.map(post => `
       <article class="card">
-        ${post.image ? `<img src="${post.image}" alt="${post.title}" class="card-image real-card-image">` : ""}
+        ${post.image ? `<img src="${post.image}" alt="${post.title}" class="card-image real-card-image">` : `<div class="card-image"></div>`}
         <div class="card-content">
           <span class="tag">${post.category}</span>
           <h3>${post.title}</h3>
           <p>${post.description}</p>
           <p style="color:#94a3b8;font-size:14px;">${post.image || "No image URL"}</p>
+          ${post.externalLink ? `<p style="color:#94a3b8;font-size:14px;">${post.externalLink}</p>` : ""}
           <a href="edit-post.html?id=${encodeURIComponent(post.id)}" class="edit-link">Edit</a>
           <form class="delete-form" data-id="${post.id}">
             <button type="submit" class="delete-btn">Delete</button>
@@ -246,6 +259,7 @@ async function loadEditPost() {
     editTitle.value = post.title;
     editCategory.value = post.category;
     editImage.value = post.image || "";
+    if (editExternalLink) editExternalLink.value = post.externalLink || "";
     editDescription.value = post.description;
     editContent.value = post.content;
   } catch {
@@ -277,16 +291,7 @@ function renderPosts(target, posts) {
     return;
   }
 
-  target.innerHTML = posts.map(post => `
-    <article class="card">
-      ${post.image ? `<img src="${post.image}" alt="${post.title}" class="card-image real-card-image">` : ""}
-      <div class="card-content">
-        <span class="tag">${post.category}</span>
-        <h3><a href="post.html?slug=${post.slug}">${post.title}</a></h3>
-        <p>${post.description}</p>
-      </div>
-    </article>
-  `).join("");
+  target.innerHTML = posts.map(buildPostCard).join("");
 }
 
 async function loadPublicPosts(target, limit = null) {
@@ -359,6 +364,8 @@ async function loadAnalytics() {
     analyticsBoxes.innerHTML = `
       <div class="dashboard-box analytics-red"><h3>Total Views</h3><p>${data.totalViews}</p></div>
       <div class="dashboard-box analytics-green"><h3>Today's Views</h3><p>${data.dailyViews}</p></div>
+      <div class="dashboard-box analytics-red"><h3>Total Likes</h3><p>${data.totalLikes}</p></div>
+      <div class="dashboard-box analytics-green"><h3>Total Comments</h3><p>${data.totalComments}</p></div>
       <div class="dashboard-box analytics-red"><h3>Last Activity</h3><p>${data.lastActivity}</p></div>
     `;
 
@@ -370,7 +377,7 @@ async function loadAnalytics() {
     topPostsList.innerHTML = data.topPosts.map(post => `
       <div class="comment-box">
         <strong>${post.title}</strong>
-        <p>${post.views} views</p>
+        <p>${post.views} views • ${post.likes} likes • ${post.comments} comments</p>
       </div>
     `).join("");
   } catch {}
@@ -418,6 +425,7 @@ async function loadSinglePost() {
       <div class="single-post-content">
         <p>${post.description}</p>
         <p>${post.content.replace(/\n/g, "</p><p>")}</p>
+        ${post.externalLink ? `<p><a href="${post.externalLink}" target="_blank" class="external-link-btn">Continue Here</a></p>` : ""}
       </div>
 
       <div class="post-actions">

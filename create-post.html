@@ -9,10 +9,10 @@
 <body data-protected="true">
   <main class="dashboard-wrap">
     <aside class="dashboard-sidebar">
-      <div class="logo">
+      <a href="index.html" class="logo">
         <div class="logo-icon">HN</div>
         <div class="logo-text"><span class="hotts">HOTTS</span> <span class="news">NEWS</span></div>
-      </div>
+      </a>
 
       <nav class="dashboard-nav">
         <a href="dashboard.html">Dashboard</a>
@@ -48,6 +48,9 @@
 
           <label>Image URL</label>
           <input type="text" name="image" placeholder="Paste image URL" />
+
+          <label>External Link (optional)</label>
+          <input type="text" name="externalLink" placeholder="https://example.com" />
 
           <label>Short Description</label>
           <textarea name="description" rows="4" placeholder="Enter short description" required></textarea>
