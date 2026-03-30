@@ -658,3 +658,38 @@ if (memberLogoutBtn) {
     window.location.href = "/member-login.html";
   });
 }
+const dailyCheckinBtn = document.getElementById("dailyCheckinBtn");
+const dailyCheckinMessage = document.getElementById("dailyCheckinMessage");
+
+if (dailyCheckinBtn && userPoints) {
+  dailyCheckinBtn.addEventListener("click", async () => {
+    const user = JSON.parse(localStorage.getItem("hotts_user") || "null");
+
+    if (!user || !user.email) {
+      dailyCheckinMessage.textContent = "Please login first";
+      dailyCheckinMessage.style.color = "#ef4444";
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("email", user.email);
+
+    const response = await fetch("/daily-checkin", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      user.points = data.points;
+      localStorage.setItem("hotts_user", JSON.stringify(user));
+      userPoints.textContent = data.points;
+      dailyCheckinMessage.textContent = data.message;
+      dailyCheckinMessage.style.color = "#22c55e";
+    } else {
+      dailyCheckinMessage.textContent = data.message || "Check-in failed";
+      dailyCheckinMessage.style.color = "#ef4444";
+    }
+  });
+}
