@@ -650,3 +650,11 @@ loadPublicPosts(publicHomePosts, 6);
 loadPublicPosts(publicPostsList);
 loadCategoryPosts();
 loadSinglePost();
+const memberLogoutBtn = document.getElementById("memberLogoutBtn");
+
+if (memberLogoutBtn) {
+  memberLogoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("hotts_user");
+    window.location.href = "/member-login.html";
+  });
+}
