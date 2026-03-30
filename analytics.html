@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics - HOTTS NEWS</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-protected="true">
+  <main class="dashboard-wrap">
+    <aside class="dashboard-sidebar">
+      <div class="logo">
+        <div class="logo-icon">HN</div>
+        <div class="logo-text"><span class="hotts">HOTTS</span> <span class="news">NEWS</span></div>
+      </div>
+
+      <nav class="dashboard-nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="create-post.html">Create Post</a>
+        <a href="posts.html">All Posts</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="settings.html">Settings</a>
+        <a href="index.html">View Site</a>
+        <a href="#" id="logoutBtn">Logout</a>
+      </nav>
+    </aside>
+
+    <section class="dashboard-main">
+      <div class="page-hero">
+        <span class="tag">Analytics</span>
+        <h1>Website Performance</h1>
+        <p>Real tracked activity from your website.</p>
+      </div>
+
+      <div class="dashboard-grid" id="analyticsBoxes">
+        <div class="dashboard-box"><h3>Total Views</h3><p>Loading...</p></div>
+        <div class="dashboard-box"><h3>Today's Views</h3><p>Loading...</p></div>
+        <div class="dashboard-box"><h3>Last Activity</h3><p>Loading...</p></div>
+      </div>
+
+      <section class="form-card" style="margin-top:20px;">
+        <h3>Top Viewed Posts</h3>
+        <div id="topPostsList"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

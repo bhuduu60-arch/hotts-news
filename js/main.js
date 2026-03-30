@@ -32,10 +32,25 @@ const editImage = document.getElementById("editImage");
 const editDescription = document.getElementById("editDescription");
 const editContent = document.getElementById("editContent");
 const editMessage = document.getElementById("editMessage");
+const analyticsBoxes = document.getElementById("analyticsBoxes");
+const topPostsList = document.getElementById("topPostsList");
 const isProtectedPage = document.body.dataset.protected === "true";
 
 if (menuToggle && navMenu) {
   menuToggle.addEventListener("click", () => navMenu.classList.toggle("show"));
+}
+
+async function trackView(slug = "") {
+  try {
+    const formData = new FormData();
+    formData.append("path", window.location.pathname);
+    if (slug) formData.append("slug", slug);
+
+    await fetch("/track-view", {
+      method: "POST",
+      body: formData
+    });
+  } catch {}
 }
 
 if (loginForm) {
@@ -331,6 +346,35 @@ async function loadLikes(slug) {
   }
 }
 
+async function loadAnalytics() {
+  if (!analyticsBoxes || !topPostsList) return;
+
+  try {
+    const response = await fetch("/analytics");
+    const data = await response.json();
+
+    if (!data.success) return;
+
+    analyticsBoxes.innerHTML = `
+      <div class="dashboard-box"><h3>Total Views</h3><p>${data.totalViews}</p></div>
+      <div class="dashboard-box"><h3>Today's Views</h3><p>${data.dailyViews}</p></div>
+      <div class="dashboard-box"><h3>Last Activity</h3><p>${data.lastActivity}</p></div>
+    `;
+
+    if (!data.topPosts.length) {
+      topPostsList.innerHTML = `<p>No viewed posts yet.</p>`;
+      return;
+    }
+
+    topPostsList.innerHTML = data.topPosts.map(post => `
+      <div class="comment-box">
+        <strong>${post.title}</strong>
+        <p>${post.views} views</p>
+      </div>
+    `).join("");
+  } catch {}
+}
+
 async function loadSinglePost() {
   if (!singlePostContainer) return;
 
@@ -343,6 +387,8 @@ async function loadSinglePost() {
   }
 
   try {
+    await trackView(slug);
+
     const response = await fetch(`/public-post?slug=${encodeURIComponent(slug)}`);
     const data = await response.json();
 
@@ -474,6 +520,10 @@ if (searchForm) {
   });
 }
 
+if (!isProtectedPage) {
+  trackView();
+}
+
 if (isProtectedPage) {
   fetch("/session")
     .then((response) => response.json())
@@ -483,6 +533,7 @@ if (isProtectedPage) {
       } else {
         loadAdminPosts();
         loadEditPost();
+        loadAnalytics();
       }
     })
     .catch(() => {
