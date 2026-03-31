@@ -9,15 +9,16 @@
 <body data-protected="true">
   <main class="dashboard-wrap">
     <aside class="dashboard-sidebar">
-      <div class="logo">
+      <a href="index.html" class="logo">
         <div class="logo-icon">HN</div>
         <div class="logo-text"><span class="hotts">HOTTS</span> <span class="news">NEWS</span></div>
-      </div>
+      </a>
 
       <nav class="dashboard-nav">
         <a href="dashboard.html">Dashboard</a>
         <a href="create-post.html">Create Post</a>
         <a href="posts.html">All Posts</a>
+        <a href="tasks.html">Create Tasks</a>
         <a href="settings.html">Settings</a>
         <a href="index.html">View Site</a>
         <a href="#" id="logoutBtn">Logout</a>
@@ -28,7 +29,7 @@
       <div class="page-hero">
         <span class="tag">Admin</span>
         <h1>Dashboard</h1>
-        <p>Welcome to your HOTTS NEWS admin dashboard.</p>
+        <p>Manage posts, tasks and performance from one place.</p>
       </div>
 
       <div class="dashboard-grid">
@@ -41,17 +42,17 @@
           <p>5</p>
         </div>
         <div class="dashboard-box analytics-red">
-          <h3>Featured Posts</h3>
-          <p>0</p>
+          <h3>Total Likes</h3>
+          <p id="dashboardLikes">0</p>
         </div>
         <div class="dashboard-box analytics-green">
-          <h3>Drafts</h3>
-          <p>0</p>
+          <h3>Total Comments</h3>
+          <p id="dashboardComments">0</p>
         </div>
       </div>
 
       <section class="form-card analytics-section">
-        <h2>Live Analytics</h2>
+        <h2>Website Analytics</h2>
         <div class="dashboard-grid" id="analyticsBoxes">
           <div class="dashboard-box analytics-red"><h3>Total Views</h3><p>Loading...</p></div>
           <div class="dashboard-box analytics-green"><h3>Today's Views</h3><p>Loading...</p></div>
@@ -62,6 +63,11 @@
       <section class="form-card analytics-section">
         <h2>Top Viewed Posts</h2>
         <div id="topPostsList"></div>
+      </section>
+
+      <section class="form-card analytics-section">
+        <h2>Created Tasks</h2>
+        <div id="adminTaskList"></div>
       </section>
     </section>
   </main>
